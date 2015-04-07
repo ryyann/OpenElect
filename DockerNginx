@@ -8,7 +8,7 @@ RUN     mkdir /bundle; chmod 755 /bundle;
 
 RUN     nginx -t
 
-RUN ls -la /bundle
+RUN     ls -la /bundle
 
 EXPOSE  80
 
@@ -21,4 +21,4 @@ EXPOSE  80
 # with the node IP / port and then starts it.
 # (Only because NGINX does not support system ENV variable in its config)
 
-CMD     ["/bin/bash", "/bundle/start.sh"]
+CMD     ["/bin/bash", "/data/start.sh"]

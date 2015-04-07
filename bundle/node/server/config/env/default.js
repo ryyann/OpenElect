@@ -8,11 +8,12 @@ var _ = require('lodash');
 var env = process.env.NODE_ENV || 'development';
 var envConfig = require('./' + env);
 
+console.log(process.env.port);
 // All configurations will extend these options
 var defaults = {
   server: {
     // Port to run server on
-    port: process.env.PORT || 9010,
+    port: process.env.PORT || 8080,
     // Host/URL to run server on
     host: process.env.HOSTNAME || '127.0.0.1',
     // Log level

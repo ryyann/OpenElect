@@ -1,9 +1,3 @@
-/* 
- * MIT License (MIT) - Copyright (c) 2014 Johann Troendle
- * 
- * This file is part of <grunt-dock>.
- */
-
 'use strict';
 
 
@@ -23,9 +17,7 @@ module.exports = function(grunt) {
     dock: {
   
       options: {
-
         // Docker connection options
-        // For this example, assume it is a Boot2Docker config.
         // By default, Boot2Docker only accepts secure connection.
         docker: {
           version: 'v1.15',
@@ -40,7 +32,6 @@ module.exports = function(grunt) {
         
       },
 
-      // For this sample, we will use a dev target
       dev: {
         options: {
 
@@ -58,11 +49,13 @@ module.exports = function(grunt) {
                 // Bind the directory 'bundle/node' into the directory container '/bundle'
                 start:  { 
                   "PortBindings": { "8080/tcp": [ { "HostPort": "8080" } ] },
-                  "Binds":[__dirname + "/bundle/node:/bundle"],
+                  "Binds":[__dirname + "/bundle/node:/data"],
+                  "cmd": [
+                    "grunt server"
+                  ] 
                 },
 
-                // For logs, only stdout
-                logs:   { stdout: true }
+                logs:   { stdout: true, stderr: true }
               }
             },
 
@@ -80,7 +73,7 @@ module.exports = function(grunt) {
                   "PortBindings": { "80/tcp": [ { "HostPort": "8081" } ] },
                   "Links": ["node:latest"],
                   "Binds":[
-                    __dirname + "/bundle/nginx:/bundle",
+                    __dirname + "/bundle/nginx:/data",
                     __dirname + "/bundle/nginx:/etc/nginx/sites-available",
                   ]
                 },
@@ -94,7 +87,7 @@ module.exports = function(grunt) {
       }
     },
 
-    // Commands to run before building
+    // Commands to run before building or stopping
     shell: {
       boot: {
         command: 'chmod +x ./docker_wrapper.sh && source docker_wrapper.sh'
@@ -110,11 +103,13 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('start', [
+    'clean',
     'dock:prod:build',
     'dock:prod:start'
   ]);
 
   grunt.registerTask('stop', [
+    'clean',
     'dock:prod:stop'
   ]);
 
@@ -122,19 +117,23 @@ module.exports = function(grunt) {
     'dock:clean'
   ]);
 
-  grunt.registerTask('startDev', [
+  grunt.registerTask('startdev', [
     'shell:boot',
     'dock:dev:build',
     'dock:dev:start'
   ]);
 
-  grunt.registerTask('stopDev', [
+  grunt.registerTask('stopdev', [
     'dock:dev:stop',
+    'clean'
+  ]);
+
+  grunt.registerTask('shutdown', [
     'shell:stop'
   ]);
 
   grunt.registerTask('default', [
-    'startDev'
+    'startdev'
   ]);
 
 };
