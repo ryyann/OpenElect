@@ -1,0 +1,14 @@
+#
+# Dockerfile for node
+#
+
+FROM    dockerfile/nodejs-bower-grunt
+
+# Install node
+RUN     export DEBIAN_FRONTEND=noninteractive && \
+        mkdir /bundle; cd /bundle && \
+        npm install -g nodemon
+
+EXPOSE  8080
+
+CMD		["npm", "install"]

@@ -1,0 +1,9 @@
+#
+# Dockerfile for postgres
+#
+
+FROM    dockerfile/postgres
+
+RUN     mkdir /bundle;
+
+EXPOSE  5432
