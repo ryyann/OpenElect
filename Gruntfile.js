@@ -34,38 +34,32 @@ module.exports = function(grunt) {
 
       dev: {
         options: {
-
           // Docker images definition
           images: {
-
             // The Node.js container
             'node': {
               // The Dockerfile to use
-              dockerfile: 'DockerNode',
-
+              dockerfile: './bundle/node/Dockerfile',
               options: {
                 
                 // A startup, bind the 8080 port to the host
                 // Bind the directory 'bundle/node' into the directory container '/bundle'
                 start:  { 
                   "PortBindings": { "8080/tcp": [ { "HostPort": "8080" } ] },
-                  "Binds":[__dirname + "/bundle/node:/data"],
-                  "cmd": [
-                    "grunt server"
+                  "Binds":[__dirname + "/bundle/node:/opt/app"],
+                  "Cmd": [
+                    "npm start"
                   ] 
                 },
 
                 logs:   { stdout: true, stderr: true }
               }
             },
-
             // The NGINX container
             'nginx': {
               // The Dockerfile to use
-              dockerfile: 'DockerNginx',
-
+              dockerfile: './bundle/nginx/Dockerfile',
               options: {
-
                 // Bind the 80 port to the host 8081
                 // Links this container to the node one. So Docker env variable will be accessible
                 // Bind 2 directories to the container (config, NGINX startup script, default index.html file)
